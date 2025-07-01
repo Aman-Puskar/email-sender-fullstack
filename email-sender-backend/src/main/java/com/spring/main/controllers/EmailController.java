@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,31 +23,36 @@ import com.spring.main.service.EmailService;
 @RequestMapping("/api/v1/email")
 public class EmailController {
 
-    @Autowired
-    private EmailService emailService;
+        @Autowired
+        private EmailService emailService;
 
-    @PostMapping("/send")
-    public ResponseEntity<EmailCustomResponse> sendEmail(@RequestBody EmailRequest request) {
-        emailService.sendEmailWithHtml(request.getTo(), request.getSubject(), request.getMessage());
-        return ResponseEntity.ok(EmailCustomResponse.builder()
-                .message("Email send successfully!")
-                .httpStatus(HttpStatus.OK)
-                .success(true)
-                .build());
-    }
+        @GetMapping("/ping")
+        public ResponseEntity<String> ping() {
+                return ResponseEntity.ok("Server is awake!");
+        }
 
-    @PostMapping("/send-with-file")
-    public ResponseEntity<EmailCustomResponse> sendWithFile(@RequestPart("request") EmailRequest request,
-            @RequestPart("file") MultipartFile file) throws IOException {
+        @PostMapping("/send")
+        public ResponseEntity<EmailCustomResponse> sendEmail(@RequestBody EmailRequest request) {
+                emailService.sendEmailWithHtml(request.getTo(), request.getSubject(), request.getMessage());
+                return ResponseEntity.ok(EmailCustomResponse.builder()
+                                .message("Email send successfully!")
+                                .httpStatus(HttpStatus.OK)
+                                .success(true)
+                                .build());
+        }
 
-        emailService.sendEmailWithFile(request.getTo(), request.getSubject(), request.getMessage(),
-                file);
+        @PostMapping("/send-with-file")
+        public ResponseEntity<EmailCustomResponse> sendWithFile(@RequestPart("request") EmailRequest request,
+                        @RequestPart("file") MultipartFile file) throws IOException {
 
-        return ResponseEntity.ok(EmailCustomResponse.builder()
-                .message("Email send successfully with file")
-                .httpStatus(HttpStatus.OK)
-                .success(true)
-                .build());
-    }
+                emailService.sendEmailWithFile(request.getTo(), request.getSubject(), request.getMessage(),
+                                file);
+
+                return ResponseEntity.ok(EmailCustomResponse.builder()
+                                .message("Email send successfully with file")
+                                .httpStatus(HttpStatus.OK)
+                                .success(true)
+                                .build());
+        }
 
 }
