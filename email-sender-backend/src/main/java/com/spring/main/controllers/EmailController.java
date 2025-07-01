@@ -22,31 +22,31 @@ import com.spring.main.service.EmailService;
 @RequestMapping("/api/v1/email")
 public class EmailController {
 
-        @Autowired
-        private EmailService emailService;
+    @Autowired
+    private EmailService emailService;
 
-        @PostMapping("/send")
-        public ResponseEntity<EmailCustomResponse> sendEmail(@RequestBody EmailRequest request) {
-                emailService.sendEmailWithHtml(request.getTo(), request.getSubject(), request.getMessage());
-                return ResponseEntity.ok(EmailCustomResponse.builder()
-                                .message("Email send successfully!")
-                                .httpStatus(HttpStatus.OK)
-                                .success(true)
-                                .build());
-        }
+    @PostMapping("/send")
+    public ResponseEntity<EmailCustomResponse> sendEmail(@RequestBody EmailRequest request) {
+        emailService.sendEmailWithHtml(request.getTo(), request.getSubject(), request.getMessage());
+        return ResponseEntity.ok(EmailCustomResponse.builder()
+                .message("Email send successfully!")
+                .httpStatus(HttpStatus.OK)
+                .success(true)
+                .build());
+    }
 
-        @PostMapping("/send-with-file")
-        public ResponseEntity<EmailCustomResponse> sendWithFile(@RequestPart("request") EmailRequest request,
-                        @RequestPart("file") MultipartFile file) throws IOException {
+    @PostMapping("/send-with-file")
+    public ResponseEntity<EmailCustomResponse> sendWithFile(@RequestPart("request") EmailRequest request,
+            @RequestPart("file") MultipartFile file) throws IOException {
 
-                emailService.sendEmailWithFile(request.getTo(), request.getSubject(), request.getMessage(),
-                                file);
+        emailService.sendEmailWithFile(request.getTo(), request.getSubject(), request.getMessage(),
+                file);
 
-                return ResponseEntity.ok(EmailCustomResponse.builder()
-                                .message("Email send successfully with file")
-                                .httpStatus(HttpStatus.OK)
-                                .success(true)
-                                .build());
-        }
+        return ResponseEntity.ok(EmailCustomResponse.builder()
+                .message("Email send successfully with file")
+                .httpStatus(HttpStatus.OK)
+                .success(true)
+                .build());
+    }
 
 }
