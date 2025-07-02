@@ -19,6 +19,8 @@ function EmailSender() {
     }
   )
 
+  const [fileSelected, setFileSelected] = useState(false);
+
   //handling changes in field
   function handleFieldChange(event, fieldName) {
     setEmailData({...emailData, [fieldName]:event.target.value});
@@ -27,6 +29,7 @@ function EmailSender() {
   function setFile(event) {
     setEmailData({...emailData,"file":event.target.files[0]})
     console.log(event.target.files[0]);
+    setFileSelected(true);
     
   }                                         
 {/* Loader useState*/}
@@ -70,7 +73,8 @@ async function handleSubmit(event) {
       subject:"",
       message:"",
       file:null
-    })    
+    }) 
+    setFileSelected(false);   
   } catch (error) {
     console.log(error);
     toast.error("Error to send email");
@@ -91,6 +95,7 @@ function clear(){
       message:"",
       file:null
     }) 
+    setFileSelected(false);
 }
 
   return (
@@ -131,7 +136,7 @@ function clear(){
 
 
               {/* Message */}
-              <div className="form_field mt-4 border-gray-500 rounded-2xl">
+              <div className="form_field mt-4 border-gray-500 rounded-2xl border-1">
 
                 <label htmlFor="message" className="block mb-2 ml-4  text-sm font-medium text-gray-900">Your message</label>
                 {/* <textarea
@@ -144,7 +149,7 @@ function clear(){
                 </textarea> */}
 
                 
-                <Editor  
+                <Editor
                     apiKey='19nsjud4n12l90ad30pyvwbocoyqnhhyvwst6wn4dfpytxay'
                      onInit={(evt, editor) => editorRef.current = editor}
                      initialValue="<p>Write your message...</p>"
@@ -171,6 +176,26 @@ function clear(){
                       />
               </div>
 
+                  {/* file attach Button */}
+                     <div className="file-attachment">
+                        <input
+                          type="file"
+                          id="fileInput"
+                          className="hidden"
+                          onChange={(event) => setFile(event)}
+                        />
+
+                        <label
+                          htmlFor="fileInput"
+                          className="cursor-pointer m-3 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800 inline-block"
+                        >
+                          📎 Upload File
+                        </label>
+
+                        {fileSelected &&  <div className="fileUploadMessage ml-4">
+                        <p>File selected</p>
+                      </div>}
+             </div>
 
               {/* Loader */}
              {sendLoader && 
@@ -202,24 +227,6 @@ function clear(){
                 onClick={clear} 
                 className='bg-red-700 text-white hover:bg-red-900 px-3 py-2 rounded-lg'>Clear</button>
             </div>
-
-
-              {/* file attach Button */}
-             <div className="file-attachment">
-                        <input
-                          type="file"
-                          id="fileInput"
-                          className="hidden"
-                          onChange={(event) => setFile(event)}
-                        />
-
-                        <label
-                          htmlFor="fileInput"
-                          className="cursor-pointer m-3 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800 inline-block"
-                        >
-                          📎 Upload File
-                        </label>
-             </div>
              
             </form>
         </div>
